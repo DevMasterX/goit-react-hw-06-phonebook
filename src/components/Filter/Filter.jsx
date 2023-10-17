@@ -1,18 +1,37 @@
-import { Input, Label } from './Filter.styled';
+import React from 'react';
+import { Div, Label, Input } from './Filter.styled';
 
-const Filter = ({ value, onChangeFilter }) => {
+import { nanoid } from '@reduxjs/toolkit';
+import { useSelector, useDispatch } from 'react-redux';
+import { getFilter } from 'redux/selectors';
+import { changeFilter } from 'redux/filterSlice';
+
+const filterInputId = nanoid();
+
+// Компонент фильтрации контактов
+const Filter = () => {
+  const value = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  // Обработчик изменения значения фильтра
+  const onChange = event => {
+    const normalizedValue = event.target.value.toLowerCase();
+
+    dispatch(changeFilter(normalizedValue));
+  };
+
   return (
-    <Label>
-      Find contacts by name
-      <Input
-        type="text"
-        name="filter"
-        placeholder="Search contacts..."
-        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-        value={value}
-        onChange={onChangeFilter}
-      />
-    </Label>
+    <Div>
+      <Label>
+        Find contacts by name
+        <Input
+          type="text"
+          value={value}
+          onChange={onChange}
+          id={filterInputId}
+        />
+      </Label>
+    </Div>
   );
 };
 
